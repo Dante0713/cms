@@ -1,0 +1,26 @@
+{% extends 'layout/layout.twig' %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            {% include 'application/menu.twig' %}
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <form>
+                <input name="keyword" type="text" value="{{ keyword }}">
+            </form>
+            <ul id="data-div" class="list-group">
+                {% for v in paginator  %}
+                    <li data-id="{{ v.id }}" class="list-group-item">
+                        <span class="badge">{{ v.id }}</span>
+                        {{ v.chineseName }} -- {{ v.username }}</li>
+                {% endfor %}
+            </ul>
+            <div id="pagination-div">
+                {{ paginationControl(paginator, 'Elastic', 'application/select-pagination.twig',
+                {'route':'application/user-page','controller':'index', 'keyword': keyword})}}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

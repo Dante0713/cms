@@ -1,0 +1,12 @@
+<hr>
+{#{% if userIdentity %}#}
+    {#<p><a href="{{ url('user/default',{'controller':'user-set', 'action':'index'}) }}">個人資料</a>#}
+    {#</p>#}
+    {#<hr>#}
+{#{% endif %}#}
+<p><a href="{{ url('application/default',{'controller':'forum', 'action':'health'}) }}">養身保健</a>
+</p>
+<p><a href="{{ url('application/default',{'controller':'forum', 'action':'travel'}) }}">深度旅遊</a>
+</p>
+<p><a href="{{ url('application/default',{'controller':'forum', 'action':'reading'}) }}">悅讀</a>
+</p>

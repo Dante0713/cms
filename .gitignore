@@ -1,0 +1,23 @@
+# Composer files
+composer.lock
+vendor/
+
+# Local configs
+config/autoload/*.local.php
+config/application.config.old
+
+# Binary gettext files
+*.mo
+
+data/DoctrineORMModule/Migrations
+
+# Data
+data/temp/
+temp/
+
+# Legacy ZF1
+demos/
+extras/documentation
+.idea
+
+*.lnk

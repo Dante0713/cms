@@ -1,0 +1,52 @@
+{% extends 'layout/layout.twig' %}
+{% block content %}
+    <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <ul id="data-div" class="list-group">
+                {% for v in paginator  %}
+                    <li data-id="{{ v.id }}" class="list-group-item">
+                        <span class="badge">{{ v.id }}</span>
+                        {{ v.chineseName }} -- {{ v.username }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+    <div id="pagination-div">
+        {{ paginationControl(paginator, 'Elastic', 'application/select-pagination.twig',
+        {'route':'application/user-page','controller':'index'})}}
+    </div>
+{% endblock %}
+
+{% block style %}
+    <link href="{{ basePath() }}/css/bootstrap-dialog.min.css" media="screen" rel="stylesheet" type="text/css">
+    <style>
+        #data-div li { cursor: pointer}
+        #data-div li:hover { background: #fff4b0}
+
+    </style>
+
+{% endblock style %}
+
+{% block inline %}
+    <script type="text/javascript" src="{{ basePath }}/js/bootstrap-dialog.min.js"></script>
+    <script>
+        // jQuery on document Ready
+        $(function() {
+
+            $("#data-div li").click(function () {
+                var id = $(this).data('id');
+
+                $.get('/application/index/get-user', {user_id:id}, function (html) {
+                    BootstrapDialog.show({
+                        title: '使用者資訊',
+                        message: html,
+                        nl2br: false
+                    });
+                })
+            });
+
+        });
+    </script>
+{% endblock inline %}

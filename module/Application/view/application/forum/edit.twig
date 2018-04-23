@@ -1,0 +1,17 @@
+<div class="panel">
+    <div class="panel-body">
+        {{ form().openTag(form)|raw}}
+        {{ formRow(form.get('article_title')) }}
+        {{ formRow(form.get('tags_name')) }}
+        {{ formRow(form.get('content')) }}
+        {{ form().closTag()|raw }}
+    </div>
+</div>
+
+<script>
+    $(function(){
+        CKEDITOR.replace( 'content', {
+            height: 300
+        } );
+    })
+</script>

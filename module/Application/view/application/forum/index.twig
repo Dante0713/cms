@@ -1,0 +1,107 @@
+{% extends 'layout/layout.twig' %}
+{% block searchBar %}
+    <div class="row">
+        <form>
+            <div id="search-bar" class="input-group" >
+                <input name="keyword" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{ keyword }}">
+                <span class="input-group-addon glyphicon glyphicon-search" id="sizing-addon2"></span>
+            </div>
+        </form>
+    </div>
+{% endblock searchBar %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            {% include 'application/menu.twig' %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="pull-right">
+                    <span class="btn btn-primary edit-btn"><i class="glyphicon glyphicon-pencil"></i> 發文</span>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <ul id="data-div" class="list-group">
+                    <hr>
+                    {% for v in paginator  %}
+                        <div data-id="{{ v.articleId }}" class="list-group-item">
+                            <span class="badge">{{ v.id }}</span>
+                            <p>{{ v.articleTitle }}</p>
+                            {{ v.content }}
+                        </div>
+                        <hr>
+                    {% endfor %}
+                </ul>
+                <div id="pagination-div">
+                    {{ paginationControl(paginator, 'Elastic', 'application/select-pagination.twig',
+                    {'route':'application/user-page','controller':'index', 'keyword': keyword})}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{#{% block style %}#}
+    {#<link href="{{ basePath() }}/css/bootstrap-dialog.min.css" media="screen" rel="stylesheet" type="text/css">#}
+    {#<style>#}
+        {##data-div li { cursor: pointer}#}
+        {##data-div li:hover { background: #fff4b0}#}
+    {#</style>#}
+
+{#{% endblock style %}#}
+
+{% block inline %}
+    <script type="text/javascript" src="{{ basePath }}/js/bootstrap-dialog.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
+    <script>
+        // jQuery on document Ready
+        $(".edit-btn").click(function(){
+            var url = '{{ url('application/default',{controller:'forum', action:'edit'}) }}';
+            if ($(this).hasClass('modify'))
+                url = url+'?id='+$(this).parent().attr('id').substr(4);
+            BootstrapDialog.show({
+                title: '發文',
+                message: $('<div></div>').load(url),
+                buttons: [{
+                    label: '確定送出',
+                    cssClass: 'btn-primary',
+                    action: function(dialogRef){
+                        CKupdate();
+                        var data = $("#article_form").serialize();
+                        var url = '{{ url('application/default',{controller:'forum', action:'save'}) }}';
+
+                        $.post(url, data, function(res){
+                            if (res.success) {
+                                window.location.reload();
+
+                            }
+                            else {
+                                $("#article_form input").removeClass('alert-danger');
+                                $.each(res.message, function(i,v){
+                                    $("input[name='"+i+"']").addClass('alert-danger');
+                                });
+                            }
+
+                        });
+                    }
+                },
+                    {
+                        label: '取消',
+                        cssClass: 'btn-default',
+                        action: function(dialogRef){
+                            dialogRef.close();
+                        }
+                    }]
+            });
+        });
+
+        function CKupdate() {
+            for (instance in CKEDITOR.instances)
+                CKEDITOR.instances[instance].updateElement();
+        }
+    </script>
+{% endblock inline %}
