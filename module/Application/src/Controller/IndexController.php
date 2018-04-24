@@ -47,13 +47,13 @@ class IndexController extends BaseController
         $routeKeyword = $this->params()->fromRoute('keyword',null);
         if ($queryKeyword){
             //新輸入搜尋字
-            $qb->where('u.article_title like :keyword')
+            $qb->where('u.article_title like :keyword or u.content like :keyword')
                 ->setParameter('keyword', '%'.$queryKeyword.'%');
             $keyword = $queryKeyword;
             $Page = 1;
         }elseif($routeKeyword){
             //舊有搜尋字
-            $qb->where('u.article_title like :keyword')
+            $qb->where('u.article_title like :keyword or u.content like :keyword')
                 ->setParameter('keyword', '%'.$routeKeyword.'%');
             $keyword = $routeKeyword;
             $Page = $this->params()->fromRoute('page');
@@ -69,32 +69,6 @@ class IndexController extends BaseController
 
         $viewModel->setVariable('keyword', $keyword);
         $viewModel->setVariable('paginator', $paginator);
-//        var_dump($qb->getQuery()->getArrayResult());exit;
-
-//        /** @var  $cache \Zend\Cache\Storage\Adapter\Memcached */
-//        $cache = $this->getServiceManager()->get(CacheApcFactory::class);
-//
-//        if (! $cache->hasItem(CacheApcFactory::USER_CACHE)) {
-//            /** @var $qb \Base\Entity\Menu */
-//            $qb = $em->createQueryBuilder()
-//                ->select('u')
-//                ->from('Base\Entity\User', 'u')
-//                ->getQuery()
-//                ->getResult();
-//            $cache->setItem(CacheApcFactory::USER_CACHE, $qb);
-//            echo 'is cached';
-//        }
-//        else {
-//            $qb = $cache->getItem(CacheApcFactory::USER_CACHE);
-//            echo 'from old cache';
-//        }
-//
-////        $cache->removeItem(CacheApcFactory::USER_CACHE);
-
-
-   //     $viewModel->setVariable('data', $qb);
-
-
 
         return $viewModel;
     }
