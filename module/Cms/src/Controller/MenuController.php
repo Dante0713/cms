@@ -137,12 +137,9 @@ class MenuController extends BaseController
                 $menuRes->setParams(serialize($params));
                 /** @var  $user \Base\Entity\User */
                 $user = $this->getAuthService()->getIdentity();
-
                 $menuRes->setUpdateTime(new \DateTime());
-//                $menuRes->setUser($em->getReference('Base\Entity\User', $user->getUsername()));
+                $menuRes->setUser($user);
 
-                $menuRes->setUserId($user->getId());
-//                echo get_class($user->getId());var_dump($user->getId());exit;
                 $em->persist($menuRes);
                 $em->flush();
 

@@ -47,7 +47,6 @@ class PageController extends BaseController
 
     public function getPageListAction()
     {
-
         $viewModel = new ViewModel();
         $em = $this->getEntityManager();
         $id = $this->params()->fromQuery('id');
@@ -139,6 +138,7 @@ class PageController extends BaseController
             $orderId = $qb[0]['cc'] + 1;
         }
 
+//        var_dump($menuRes->getParams());
         $params = unserialize($menuRes->getParams());
 
         switch ($kind) {
@@ -290,7 +290,7 @@ class PageController extends BaseController
             $user = $this->getAuthService()->getIdentity();
 
             $pageRes->setMenu($em->getReference('Base\Entity\Menu', $data['menu_id']));
-            $pageRes->setUser($em->getReference('Base\Entity\user', $user->getUsername()));
+            $pageRes->setUser($user);
             $pageRes->setKind($data['kind']);
 
 
@@ -637,6 +637,7 @@ class PageController extends BaseController
     public function downloadAction()
     {
         $id = $this->params()->fromQuery('id');
+
         /** @var \Zend\Http\Response $tmpResponse */
         $tmpResponse = $this->getResponse();
         $dm = $this->getDocumentManager();

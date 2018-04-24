@@ -18,7 +18,7 @@ return array(
                 'options' => array(
                     'route'    => '/cms',
                     'defaults' => array(
-                        'module' => __NAMESPACE__,
+                        'module' => 'Cms',
                         'controller'    => Controller\IndexController::class,
                         'action'        => 'index',
                     ),
@@ -51,6 +51,22 @@ return array(
                             )
                         )
                     ),
+                    'cms-page' => array(
+                        'type' => Segment::class,
+                        'options' => array(
+                            'route' => '/cms/menu[/:action]',
+                            'constraints' => array(
+                                'module' => __NAMESPACE__,
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*'
+                            ),
+                            'defaults' => array(
+                                'module' => __NAMESPACE__,
+                                'controller'    => Controller\MenuController::class,
+                                'action' => 'index',
+                            )
+                        )
+                    )
                 ),
             ),
         ),

@@ -6,7 +6,7 @@
         <ul class="list-group">
             {% for v in files %}
                 <li class="list-group-item"><span data-file_id="{{ v.id }}" class="btn btn-danger btn-xs file-name"><i
-                                class="fa fa-trash-o"></i></span>
+                                class="ion-trash-a"></i></span>
                     <a href="{{ url('cms/default',{controller:'page', action:'download'}) }}?id={{ v.fileName }}">{{ v.sourceName }}</a>
                 </li>
             {% endfor %}

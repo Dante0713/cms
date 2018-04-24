@@ -68,7 +68,7 @@ class MenuForm extends Form
             'options' => array(
                 'label' => '開啟方式',
                 'value_options' => array(
-                    '_same' => '相同視窗',
+                    '' => '相同視窗',
                     '_blank' => '另開新視窗'
                 ),
             ),

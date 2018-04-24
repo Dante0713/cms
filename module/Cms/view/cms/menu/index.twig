@@ -46,7 +46,7 @@
                                         <td>{{ layoutName[v.layout] }}</td>
                                         <td>{% if v.is_display %}顯示{% else %}<span class="text-danger">不顯示</span>{% endif %}</td>
                                         <td id="sel-{{ v.id }}" class="text-center">
-                                            <span class="btn btn-xs btn-warning edit-btn modify">修改</span>
+                                            <span class="btn btn-xs btn-warning edit-btn modify"></span>
                                             {% if v.cc == 0 %}
                                                 <span class="btn btn-xs btn-danger delete-btn">刪除</span>
                                             {% endif %}
@@ -112,23 +112,26 @@
             $(".edit-btn").click(function(){
                 var url = '{{ url('cms/default',{controller:'menu', action:'edit'}) }}';
                 if ($(this).hasClass('modify'))
-                    url = url+'?id='+$(this).parent().attr('id').substr(4);
+                url = url+'?id='+$(this).parent().attr('id').substr(4);
                 BootstrapDialog.show({
                     title: '編修選單',
                     message: $('<div></div>').load(url),
                     buttons: [{
-                        label: '確定送出',
+                        label: '確定here',
                         cssClass: 'btn-primary',
                         action: function(dialogRef){
                             CKupdate();
                             var data = $("#menuForm").serialize();
+                            {#var url = '{{ url('cms/default',{controller:'menu', action:'save'}) }}';#}
                             var url = '/cms/menu/save';
                             $.post(url, data, function(res){
                                 if (res.success) {
+                                    console.log("1.1");
                                     window.location.reload();
 
                                 }
                                 else {
+                                    console.log("1.2");
                                     $("#menuForm input").removeClass('alert-danger');
                                     $.each(res.message, function(i,v){
                                         $("input[name='"+i+"']").addClass('alert-danger');
