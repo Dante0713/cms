@@ -32,13 +32,13 @@ class ForumController extends BaseController
         $routeKeyword = $this->params()->fromRoute('keyword',null);
         if ($queryKeyword){
             //新輸入搜尋字
-            $qb->where('u.article_title like :keyword or u.content like :keyword')
+            $qb->where('u.article_title like :keyword OR u.content like :keyword')
                 ->setParameter('keyword', '%'.$queryKeyword.'%');
             $keyword = $queryKeyword;
             $Page = 1;
         }elseif($routeKeyword){
             //舊有搜尋字
-            $qb->where('u.article_title like :keyword or u.content like :keyword')
+            $qb->where('u.article_title like :keyword OR u.content like :keyword')
                 ->setParameter('keyword', '%'.$routeKeyword.'%');
             $keyword = $routeKeyword;
             $Page = $this->params()->fromRoute('page');
