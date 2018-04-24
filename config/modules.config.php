@@ -41,6 +41,7 @@ return [
     'ZF\ContentNegotiation',
     'ZF\MvcAuth',
    // 'ZendDeveloperTools',
+    'DoctrineMongoODMModule',
     'Base',
     'User',
     'Application',

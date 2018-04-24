@@ -10,6 +10,8 @@ namespace Application\Controller;
 
 use Application\Form\ArticleForm;
 use Base\Controller\BaseController;
+use Base\Entity\Article;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
@@ -47,16 +49,6 @@ class ForumController extends BaseController
             $Page = $this->params()->fromRoute('page');
         }
 
-//        for ($i=0;$i<sizeof($qb->getQuery()->getArrayResult());$i++){
-//            $qb->getQuery()->setParameter('content',$qb->getQuery()->getArrayResult()[$i]['content'] = substr($qb->getQuery()->getArrayResult()[$i]['content'],0,20));
-//            var_dump($qb->getQuery()->getArrayResult());
-//        }
-
-//        foreach ($qb->getQuery()->getArrayResult() as $articleEntity){
-//            $qb
-//            var_dump($articleEntity['content']);
-//        }
-
 
         $adapter = new DoctrineAdapter(new ORMPaginator($qb));
         $paginator = new Paginator($adapter);
@@ -64,7 +56,6 @@ class ForumController extends BaseController
         $paginator->setCurrentPageNumber($Page);
 
         $paginator->setPageRange(5);
-//        var_dump($paginator->setItem(0));exit;
 
         $viewModel->setVariable('keyword', $keyword);
         $viewModel->setVariable('paginator', $paginator);
@@ -75,15 +66,9 @@ class ForumController extends BaseController
     {
         $viewModel = new ViewModel();
         $form = new ArticleForm();
-        $em = $this->getEntityManager();
-//        $menuArr = $em->get('Base\Entity\Forum');
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
             $form->setData($data);
-
-            if ($form->isValid()) {
-                $data = $form->getData();
-            }
         }
 
         $viewModel->setVariable('form', $form);
@@ -93,34 +78,33 @@ class ForumController extends BaseController
     public function saveAction()
     {
         $jsonModel = new JsonModel();
+        $em = $this->getEntityManager();
+        $form = new ArticleForm();
         if ($this->getRequest()->isPost()) {
             $data = $this->params()->fromPost();
-            $em = $this->getEntityManager();
-            if (!$userRes = $em->getRepository('Base\Entity\User')->find($data['id']))
-                $userRes = new \Base\Entity\User();
-
-            $form = new UserForm();
-//            $roleArr = $em->getRepository('Base\Entity\User')->getRoleArray();
-//            $form->get('role')->setValueOptions($roleArr);
-
+            $articleRes = new Article();
+            $form->bind($articleRes);
             $form->setData($data);
             if ($form->isValid()) {
-                $userRes->setNickname($data['display_name']);
-                $userRes->setUsername($data['username']);
-                $userRes->setType('A');
-                //  $userRes->setRole($data['role']);
-                $userRes->setPassword(\Zend\Ldap\Attribute::createPassword($data['password']));
-                $em->persist($userRes);
+                /** @var  $user \Base\Entity\User */
+                $user = $this->getAuthService()->getIdentity();
+                $articleRes->setArticleTitle($data['article_title']);
+                $articleRes->setContent($data['content']);
+                $articleRes->setUploadTime(new \DateTime());
+                $articleRes->setUser($user);
+
+                $em->persist($articleRes);
                 $em->flush();
+
                 $jsonModel->setVariable('success', true);
             } else {
                 $jsonModel->setVariable('success', false);
                 $jsonModel->setVariable('message', $form->getMessages());
             }
         }
-
         return $jsonModel;
     }
+
 
     public function deleteAction()
     {
